@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Catatan Keuangan Harian</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      color: #111827;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1150px;
+      margin: auto;
+      padding: 24px;
+    }
+
+    .header {
+      color: white;
+      margin-bottom: 22px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 32px;
+    }
+
+    .header p {
+      margin-top: 8px;
+      color: #cbd5e1;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 20px;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 22px;
+      padding: 22px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.18);
+    }
+
+    .card h2 {
+      margin-top: 0;
+      font-size: 22px;
+    }
+
+    label {
+      display: block;
+      margin-top: 13px;
+      font-size: 14px;
+      font-weight: bold;
+      color: #374151;
+    }
+
+    input,
+    select,
+    textarea,
+    button {
+      width: 100%;
+      margin-top: 7px;
+      padding: 12px 13px;
+      border-radius: 12px;
+      border: 1px solid #d1d5db;
+      font-size: 15px;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    button {
+      border: none;
+      background: #2563eb;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 18px;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .summary-box {
+      border-radius: 18px;
+      padding: 16px;
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+    }
+
+    .summary-box small {
+      color: #64748b;
+      font-weight: bold;
+    }
+
+    .summary-box h3 {
+      margin: 9px 0 0;
+      font-size: 22px;
+    }
+
+    .income h3 {
+      color: #16a34a;
+    }
+
+    .expense h3 {
+      color: #dc2626;
+    }
+
+    .balance h3 {
+      color: #2563eb;
+    }
+
+    .charts {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .chart-card {
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      border-radius: 18px;
+      padding: 16px;
+      min-height: 260px;
+    }
+
+    .chart-title {
+      margin: 0 0 14px;
+      font-weight: bold;
+      color: #1f2937;
+    }
+
+    .bar-row {
+      margin-bottom: 13px;
+    }
+
+    .bar-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      margin-bottom: 6px;
+      color: #475569;
+    }
+
+    .bar-track {
+      height: 12px;
+      background: #e5e7eb;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      background: #2563eb;
+      border-radius: 999px;
+    }
+
+    .line-chart {
+      height: 180px;
+      display: flex;
+      align-items: end;
+      gap: 10px;
+      border-left: 1px solid #cbd5e1;
+      border-bottom: 1px solid #cbd5e1;
+      padding: 10px;
+    }
+
+    .line-bar {
+      flex: 1;
+      background: #16a34a;
+      border-radius: 8px 8px 0 0;
+      min-height: 18px;
+    }
+
+    .table-card {
+      margin-top: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 14px;
+      font-size: 14px;
+    }
+
+    th,
+    td {
+      padding: 12px;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+    }
+
+    th {
+      background: #f1f5f9;
+      color: #334155;
+    }
+
+    .badge {
+      padding: 5px 9px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .badge.in {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .badge.out {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .status {
+      margin-top: 12px;
+      font-size: 14px;
+      color: #64748b;
+    }
+
+    @media (max-width: 850px) {
+      .container {
+        padding: 14px;
+      }
+
+      .header h1 {
+        font-size: 26px;
+      }
+
+      .grid,
+      .charts {
+        grid-template-columns: 1fr;
+      }
+
+      .summary {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        padding: 18px;
+        border-radius: 18px;
+      }
+
+      .table-card {
+        overflow: hidden;
+      }
+
+      #tableArea {
+        overflow: hidden;
+      }
+
+      table,
+      thead,
+      tbody,
+      th,
+      td,
+      tr {
+        display: block;
+        width: 100%;
+      }
+
+      thead {
+        display: none;
+      }
+
+      tbody {
+        display: grid;
+        gap: 12px;
+      }
+
+      tr {
+        background: #f8fafc;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        padding: 12px;
+      }
+
+      td {
+        border-bottom: none;
+        padding: 8px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 14px;
+        font-size: 13px;
+      }
+
+      td::before {
+        font-weight: bold;
+        color: #64748b;
+        flex: 0 0 82px;
+      }
+
+      td:nth-child(1)::before {
+        content: "Tanggal";
+      }
+
+      td:nth-child(2)::before {
+        content: "Jenis";
+      }
+
+      td:nth-child(3)::before {
+        content: "Kategori";
+      }
+
+      td:nth-child(4)::before {
+        content: "Nominal";
+      }
+
+      td:nth-child(5)::before {
+        content: "Catatan";
+      }
+
+      td:nth-child(5) {
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .badge {
+        display: inline-block;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <section class="header">
+      <h1>Catatan Keuangan Harian</h1>
+      <p>Form catatan keuangan yang terhubung ke Google Sheets melalui Google Apps Script.</p>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h2>Tambah Transaksi</h2>
+
+        <form id="financeForm">
+          <label for="tanggal">Tanggal</label>
+          <input type="date" id="tanggal" name="tanggal" required />
+
+          <label for="jenis">Jenis</label>
+          <select id="jenis" name="jenis" required>
+            <option value="">Pilih jenis</option>
+            <option value="Pemasukan">Pemasukan</option>
+            <option value="Pengeluaran">Pengeluaran</option>
+          </select>
+
+          <label for="kategori">Kategori</label>
+          <select id="kategori" name="kategori" required>
+            <option value="">Pilih kategori</option>
+            <option value="Makan">Makan</option>
+            <option value="Transport">Transport</option>
+            <option value="Jajan">Jajan</option>
+            <option value="Event">Event</option>
+            <option value="Top Up">Top Up</option>
+            <option value="Lainnya">Lainnya</option>
+          </select>
+
+          <label for="nominal">Nominal</label>
+          <input type="number" id="nominal" name="nominal" placeholder="Contoh: 15000" required />
+
+          <label for="catatan">Catatan</label>
+          <textarea id="catatan" name="catatan" rows="3" placeholder="Contoh: makan siang"></textarea>
+
+          <button type="submit">Simpan Transaksi</button>
+          <div class="status" id="statusText">Siap menyimpan data ke Google Sheet.</div>
+        </form>
+      </div>
+
+      <div class="card">
+        <h2>Dashboard Keuangan</h2>
+
+        <div class="summary">
+          <div class="summary-box income">
+            <small>Total Pemasukan</small>
+            <h3 id="incomeText">Rp0</h3>
+          </div>
+
+          <div class="summary-box expense">
+            <small>Total Pengeluaran</small>
+            <h3 id="expenseText">Rp0</h3>
+          </div>
+
+          <div class="summary-box balance">
+            <small>Sisa Saldo</small>
+            <h3 id="balanceText">Rp0</h3>
+          </div>
+        </div>
+
+        <div class="charts">
+          <div class="chart-card">
+            <p class="chart-title">Pengeluaran per Kategori</p>
+            <div id="categoryBars"></div>
+          </div>
+
+          <div class="chart-card">
+            <p class="chart-title">Saldo Harian</p>
+            <div class="line-chart" id="dailyBars"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card table-card">
+      <h2>Riwayat Transaksi</h2>
+      <div id="tableArea"></div>
+    </section>
+  </main>
+
+  <script>
+    // 1. GANTI URL INI DENGAN URL WEB APP GOOGLE APPS SCRIPT KAMU
+    // Contoh: https://script.google.com/macros/s/AKfycbxxxxxxx/exec
+    const API_URL = "https://script.google.com/macros/s/AKfycbxneKRjh7eQf2ZeOlDVBWP-b1XORdUrnYR1__0ooeLV6CnVnuTwo-XhWcQkqv_Vz1auwQ/exec";
+
+    let transactions = [];
+
+    const form = document.getElementById("financeForm");
+    const statusText = document.getElementById("statusText");
+
+    document.getElementById("tanggal").valueAsDate = new Date();
+
+    form.addEventListener("submit", async function (event) {
+      event.preventDefault();
+
+      if (API_URL.includes("GANTI_DENGAN")) {
+        statusText.textContent = "Masukkan dulu URL Web App Google Apps Script pada bagian API_URL.";
+        return;
+      }
+
+      const formData = new FormData(form);
+      const payload = Object.fromEntries(formData.entries());
+      payload.nominal = Number(payload.nominal || 0);
+
+      statusText.textContent = "Menyimpan data ke Google Sheet...";
+
+      try {
+        await fetch(API_URL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        statusText.textContent = "Data berhasil dikirim. Memuat ulang data...";
+        form.reset();
+        document.getElementById("tanggal").valueAsDate = new Date();
+
+        setTimeout(loadData, 1200);
+      } catch (error) {
+        statusText.textContent = "Gagal menyimpan data. Periksa URL Apps Script dan deployment Web App.";
+      }
+    });
+
+    function loadData() {
+      if (API_URL.includes("GANTI_DENGAN")) {
+        statusText.textContent = "Ganti API_URL terlebih dahulu agar terkoneksi ke Google Sheet.";
+        transactions = [];
+        render();
+        return;
+      }
+
+      statusText.textContent = "Mengambil data dari Google Sheet...";
+
+      // JSONP dipakai agar data bisa dibaca dari GitHub Pages tanpa masalah CORS.
+      const callbackName = "handleSheetData_" + Date.now();
+      const script = document.createElement("script");
+
+      window[callbackName] = function (result) {
+        try {
+          transactions = Array.isArray(result.data) ? result.data : [];
+          render();
+          statusText.textContent = "Data berhasil dimuat dari Google Sheet.";
+        } catch (error) {
+          statusText.textContent = "Data berhasil diterima, tetapi formatnya tidak sesuai.";
+        } finally {
+          delete window[callbackName];
+          script.remove();
+        }
+      };
+
+      script.onerror = function () {
+        statusText.textContent = "Gagal mengambil data. Pastikan Web App Apps Script sudah di-deploy sebagai Anyone.";
+        delete window[callbackName];
+        script.remove();
+      };
+
+      script.src = API_URL + "?callback=" + callbackName + "&t=" + Date.now();
+      document.body.appendChild(script);
+    }
+
+    function render() {
+      renderSummary();
+      renderCategoryBars();
+      renderDailyBars();
+      renderTable();
+    }
+
+    function renderSummary() {
+      let income = 0;
+      let expense = 0;
+
+      transactions.forEach(item => {
+        const nominal = Number(item.nominal || 0);
+        if (item.jenis === "Pemasukan") income += nominal;
+        if (item.jenis === "Pengeluaran") expense += nominal;
+      });
+
+      document.getElementById("incomeText").textContent = formatRupiah(income);
+      document.getElementById("expenseText").textContent = formatRupiah(expense);
+      document.getElementById("balanceText").textContent = formatRupiah(income - expense);
+    }
+
+    function renderCategoryBars() {
+      const category = {};
+
+      transactions.forEach(item => {
+        const nominal = Number(item.nominal || 0);
+        if (item.jenis === "Pengeluaran") {
+          category[item.kategori] = (category[item.kategori] || 0) + nominal;
+        }
+      });
+
+      const entries = Object.entries(category);
+
+      if (entries.length === 0) {
+        document.getElementById("categoryBars").innerHTML = "<p>Belum ada data pengeluaran.</p>";
+        return;
+      }
+
+      const max = Math.max(...entries.map(item => item[1]), 1);
+
+      document.getElementById("categoryBars").innerHTML = entries.map(([name, value]) => {
+        const width = Math.max((value / max) * 100, 8);
+        return `
+          <div class="bar-row">
+            <div class="bar-label">
+              <span>${escapeHtml(name)}</span>
+              <span>${formatRupiah(value)}</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:${width}%"></div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function renderDailyBars() {
+      const daily = {};
+
+      transactions.forEach(item => {
+        const tanggal = item.tanggal || "Tanpa Tanggal";
+        const nominal = Number(item.nominal || 0);
+
+        daily[tanggal] = daily[tanggal] || 0;
+        daily[tanggal] += item.jenis === "Pemasukan" ? nominal : -nominal;
+      });
+
+      const values = Object.values(daily);
+
+      if (values.length === 0) {
+        document.getElementById("dailyBars").innerHTML = "<p>Belum ada data harian.</p>";
+        return;
+      }
+
+      const max = Math.max(...values.map(value => Math.abs(value)), 1);
+
+      document.getElementById("dailyBars").innerHTML = values.map(value => {
+        const height = Math.max((Math.abs(value) / max) * 160, 18);
+        return `<div class="line-bar" title="${formatRupiah(value)}" style="height:${height}px"></div>`;
+      }).join("");
+    }
+
+    function renderTable() {
+      if (transactions.length === 0) {
+        document.getElementById("tableArea").innerHTML = "Belum ada transaksi.";
+        return;
+      }
+
+      const rows = [...transactions].reverse().map(item => `
+        <tr>
+          <td>${escapeHtml(item.tanggal || "-")}</td>
+          <td><span class="badge ${item.jenis === "Pemasukan" ? "in" : "out"}">${escapeHtml(item.jenis || "-")}</span></td>
+          <td>${escapeHtml(item.kategori || "-")}</td>
+          <td>${formatRupiah(Number(item.nominal || 0))}</td>
+          <td>${escapeHtml(item.catatan || "-")}</td>
+        </tr>
+      `).join("");
+
+      document.getElementById("tableArea").innerHTML = `
+        <table>
+          <thead>
+            <tr>
+              <th>Tanggal</th>
+              <th>Jenis</th>
+              <th>Kategori</th>
+              <th>Nominal</th>
+              <th>Catatan</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+      `;
+    }
+
+    function formatRupiah(number) {
+      return new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+        minimumFractionDigits: 0
+      }).format(Number(number || 0));
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    loadData();
+  </script>
+</body>
+</html>
